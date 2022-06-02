@@ -1,0 +1,40 @@
+ <!-- laravel add images from local storage  -->
+
+ /public->images(folder name)/image.jpg
+
+ <img src="{{asset('images/image.jpg')}}" alt=""> <--------path
+
+ <!-- laravel add css and js file from public folder -->
+
+ /public->css(folder name)/style.css
+
+link:css 
+ <link rel="stylesheet" href="css/style.css"> 
+ <link rel="stylesheet" href="{{asset('css/style.css')}}"> 
+
+
+/public->js(folder name)/myscrpit.js
+
+script:src 
+<script src="js/myscript.js"></script>
+<script src="{{asset('js/myscript.js')}}"></script>
+
+
+<!-- laravel extend page and section  -->
+
+@yield('title')
+@yield('main')
+
+
+@extends('header')
+@section('title' ,'about')
+@section('main')
+
+<!-- code...  -->
+@endsection or @stop 
+
+
+
+
+
+

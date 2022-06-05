@@ -1,40 +1,146 @@
- <!-- laravel add images from local storage  -->
+<!-- laravel add images from local storage  -->
 
- /public->images(folder name)/image.jpg
+/public->images(folder name)/image.jpg
 
- <img src="{{asset('images/image.jpg')}}" alt=""> <--------path
+<img src="{{asset('images/image.jpg')}}" alt="">
+<--------path <!-- laravel add css and js file from public folder -->
 
- <!-- laravel add css and js file from public folder -->
+    /public->css(folder name)/style.css
 
- /public->css(folder name)/style.css
-
-link:css 
- <link rel="stylesheet" href="css/style.css"> 
- <link rel="stylesheet" href="{{asset('css/style.css')}}"> 
-
-
-/public->js(folder name)/myscrpit.js
-
-script:src 
-<script src="js/myscript.js"></script>
-<script src="{{asset('js/myscript.js')}}"></script>
+    link:css
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="{{asset('css/style.css')}}">
 
 
-<!-- laravel extend page and section  -->
+    /public->js(folder name)/myscrpit.js
 
-@yield('title')
-@yield('main')
-
-
-@extends('header')
-@section('title' ,'about')
-@section('main')
-
-<!-- code...  -->
-@endsection or @stop 
+    script:src
+    <script src="js/myscript.js"></script>
+    <script src="{{asset('js/myscript.js')}}"></script>
 
 
+    <!-- laravel extend page and section  -->
+
+    @yield('title')
+    @yield('main')
+
+
+    @extends('header')
+    @section('title' ,'about')
+    @section('main')
+
+    <!-- code...  -->
+    @endsection or @stop
+
+
+    <!-- laravel migration  -->
+
+    $table->bigIncrements('id'); -------	Incrementing ID using a "big integer" equivalent.
+    $table->bigInteger('votes'); ---------	BIGINT equivalent to the table
+    $table->binary('data'); ---------	BLOB equivalent to the table
+    $table->boolean('confirmed'); ---------	BOOLEAN equivalent to the table
+    $table->char('name', 4); ---------	CHAR equivalent with a length
+    $table->date('due_date')->nullable();
+    $table->date('created_at'); ---------	DATE equivalent to the table
+    $table->dateTime('created_at'); ---------	DATETIME equivalent to the table
+    $table->decimal('amount', 5, 2); ---------	DECIMAL equivalent with a precision and scale
+    $table->double('column', 15, 8); ---------	DOUBLE equivalent with precision, 15 digits in total and 8 after the decimal point
+    $table->enum('choices', array('foo', 'bar')); ---------	ENUM equivalent to the table
+    $table->float('amount'); 	---------FLOAT equivalent to the table
+    $table->increments('id'); ---------	Incrementing ID to the table (primary key).
+    $table->integer('votes'); ---------	INTEGER equivalent to the table
+    $table->longText('description'); ---------	LONGTEXT equivalent to the table
+    $table->mediumInteger('numbers'); ---------	MEDIUMINT equivalent to the table
+    $table->mediumText('description'); ---------	MEDIUMTEXT equivalent to the table
+    $table->morphs('taggable'); ---------	Adds INTEGER taggable_id and STRING taggable_type
+    $table->nullableTimestamps(); ---------	Same as timestamps(), except allows NULLs
+    $table->smallInteger('votes'); ---------	SMALLINT equivalent to the table
+    $table->tinyInteger('numbers'); ---------	TINYINT equivalent to the table
+    $table->softDeletes(); ---------	Adds deleted_at column for soft deletes
+    $table->string('email'); ---------	VARCHAR equivalent column
+    $table->string('name', 100); ---------	VARCHAR equivalent with a length
+    $table->text('description'); ---------	TEXT equivalent to the table
+    $table->time('sunrise'); ---------	TIME equivalent to the table
+    $table->timestamp('added_on'); ---------	TIMESTAMP equivalent to the table
+    $table->timestamps(); ---------	Adds created_at and updated_at columns
+    $table->rememberToken(); ---------	Adds remember_token as VARCHAR(100) NULL
+
+
+    ->nullable() 	Designate that the column allows NULL values
+    ->default($value) 	Declare a default value for a column
+    ->unsigned() 	Set INTEGER to UNSIGNED
 
 
 
+    <!-- Laravel Data store in Mysql  -->
 
+    public function store(Request $request){
+
+        <!-- laravel dd  -->
+
+        dd($request->all());
+
+
+    $request ->validate(
+    [
+    'name'='required',
+    'username'='required|unique:username',
+    'title' => 'required|unique:posts|max:255',
+    'email' => 'unique:users,email_address'
+    'PHONE' => 'required|regex:/(0)[0-9]/|not_regex:/[a-z]/|min:9',
+    'due_date' => 'required|date',
+
+
+    ]);
+
+    $data = new User()(Model Name);
+    $data->name= $request->name;
+    $data->username=$request->username;
+    $data->title=$request->title;
+    $data->save();
+
+    return Redirect::back()->with('msg', 'The Message');
+    <!-- or -->
+    use Session;
+
+    return Redirect::back();
+    Session::flash('msg', "the message");
+    }
+
+
+    <!-- Shorthand store  -->
+
+    public function store()
+    {
+        Product::create(request()->validate([
+            'name' => 'required',
+            'price' => 'required',
+            'note' => 'nullable'
+        ]));
+ 
+        return redirect(route('products.index'));
+    }
+
+   
+
+
+    <!-- laravel show validation error  -->
+
+    @error('name')
+    <strong style="color:red ;">{{$message}}</strong>
+    @enderror
+
+
+    <!-- laravel show created message  session  -->
+    @if (\Session::has('msg'))
+    <div class="alert alert-success">
+        <ul>
+            <li>{!! \Session::get('msg') !!}</li>
+        </ul>
+    </div>
+    @endif
+
+    <!-- or -->
+    @if (Session::has('msg'))
+    <div class="alert alert-info">{{ Session::get('msg') }}</div>
+    @endif

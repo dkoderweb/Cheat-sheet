@@ -144,3 +144,29 @@
     @if (Session::has('msg'))
     <div class="alert alert-info">{{ Session::get('msg') }}</div>
     @endif
+
+
+
+    <!-- laravel number varification otp  -->
+
+    website ->>>nexmo dashboard 
+    github ->>>nexmo laravel package 
+
+
+    <!-- controlller code  -->
+      
+    public function register(Request $request){
+
+        $num = $request->mobile;
+        $otp = mt_rand(1000, 9999);
+
+        Nexmo::message()->send([
+        'to'=> '91' .$num,
+        'form'=> '6354729761',  <-------kis number se bhej na he wo number 
+        'text'=> 'your OTP is' .$otp. 'for verification'
+         ]);
+         echo 'success' , 'Message sent';
+    }
+
+
+

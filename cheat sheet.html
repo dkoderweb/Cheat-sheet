@@ -91,9 +91,15 @@
     'due_date' => 'required|date',
 
 
-    ]);
+    ]);    
 
     $data = new User()(Model Name);
+    <!-- Upload image  -->
+    $image= $request->file;
+    $imagename=time(). '.' .$image->getClientoriginalExtension();
+    $request->file->move('doctorimage' ,$imagename);
+    $data->image=$imagename;
+
     $data->name= $request->name;
     $data->username=$request->username;
     $data->title=$request->title;
@@ -146,13 +152,134 @@
     @endif
 
 
+    <!-- laravel install jetstream  -->
+
+-->composer require laravel/jetstream
+-->php artisan jetstream:install livewire
+-->npm install
+-->npm run dev
+--><!-- change migration file if you include register item in user--> and change view blade and change controller and change user model 
+-->php artisan migrate
+ 
+    <!-- laravel user and admin login sepret  -->
+
+    public function redirect(){
+        if(Auth::id()){
+            if (AUth::user()->usertype=="0")  <-----user login
+            {
+                return view('user.home')
+            }
+            else
+            {
+                returnview('admin.home')  <---admin login
+            }
+        }
+        else
+        {
+            return redirect()->back();
+        }
+    }
+    <!-- store and view all data  -->
+
+    public function index(){
+        $data = doctor::all();
+        return view('user.home' ,compact('data'));
+    }
+
+    <!-- store and view data from id  -->
+    public function appointment(){
+        if(Auth::id()){
+            $userid = Auth::user()-id;
+            $data = appointment::where('user_id', $userid);
+            return view('user.myappointment', compact('data'))
+        }
+    }
+
+    <!-- stored data deleted function  -->
+    public function detele($id){
+        $data = appointment::find($id);
+        $data->delete();
+        return redirect()->back();  
+    }
+
+    <!-- find data and change status   -->
+    public function change($id){
+        $data = appointment::find($id);
+        $data->status="approved";
+        $data->save();
+         return redirect()->back();  
+    }
+
+    <!-- find and update data  -->
+    public function update($id){
+        $data = doctor::find($id);
+        return view('admin.update_doctor', compact('data'));
+             }
+        <!-- find and edit data       -->
+     public function store(Request $request, $id){
+
+           
+    
+    
+        $request ->validate(
+        [
+        'name'='required',
+        'username'='required|unique:username',
+        'title' => 'required|unique:posts|max:255',
+        'email' => 'unique:users,email_address'
+        'PHONE' => 'required|regex:/(0)[0-9]/|not_regex:/[a-z]/|min:9',
+        'due_date' => 'required|date',
+    
+    
+        ]);    
+    
+        $data = doctor::find($id);  <-------find and edit data
+
+        $data->name= $request->name;
+        $data->username=$request->username;
+        $data->title=$request->title;
+        
+        $image= $request->file;
+        if($image){
+        $imagename=time(). '.' .$image->getClientoriginalExtension();
+        $request->file->move('doctorimage' ,$imagename);
+        $data->image=$imagename;
+        };
+
+        $data->save();
+    
+        return Redirect::back()->with('msg', 'The Message');
+
+
+    <!-- Laravel if login and logout  -->
+
+    @if(Route::has('login'))
+    @auth
+        log out function
+    @else
+        login function
+        register function
+    @endauth
+    @endif
+
+    <!-- laravel foreach view  -->
+
+    @foreach($data as $datas)
+    {{$datas->name}}
+    @endforeach
+
+    <!-- laravel admin dashboard  -->
+
+    website-->  https://github.com/BootstrapDash/corona-free-dark-bootstrap-admin-template
+
+    
+
+
 
     <!-- laravel number varification otp  -->
 
     website ->>>nexmo dashboard 
-    github ->>> https://bestofphp.com/repo/nexmo-nexmo-php
-    composer require vonage/client-core:^2.3
-
+    github ->>>nexmo laravel package 
 
 
     <!-- controlller code  -->

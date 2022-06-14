@@ -249,6 +249,103 @@
         $data->save();
     
         return Redirect::back()->with('msg', 'The Message');
+    }
+
+
+    <!-- laravel login  -->
+    function login(Request $login){
+        $user =User::where('email',$login->email)->get();
+        if (Crypt::decrypt($user[0]->password)==$login->password){
+         $login->session()->put('user',$user[0]->name);
+         $login->session()->flash('login','You are logged in Successfully' );
+         return redirect('home');
+        }
+        else{
+         $login->session()->flash('wrong','Check your password and try again' );
+        
+         return redirect('login');
+        }
+        
+   
+      }
+
+      <!-- flash session  -->
+            @if(Session::get('login'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{Session::get('login')}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
+
+
+    <!-- laravel register      -->
+    function register(Request $register){
+    
+        $register->validate([
+         'email' => ['required', 'string', 'email', 'max:100',  Rule::unique('user')],
+         'contact'=> ['required', 'max:10', 'min:10'],
+   
+       ]);
+        $user = new User;
+        $user->name=$register->name;
+        $user->email=$register->email;
+        $user->password=Crypt::encrypt($register->password);
+        $user->contact=$register->contact;
+        $user->save();
+         return redirect('login');
+        
+   
+   
+      }
+        <!-- flash session  -->
+        @if(Session::get('login'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{Session::get('login')}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif 
+
+    <!-- laravel log out      -->
+    Route::get('/logout', function () {
+        if(Session::get('user')){
+            session()->pull('user');
+        }
+        Session::flash('logout',"You are logged out!");
+    
+        return redirect('login');
+    });
+
+    <!-- view blade  -->
+
+    @if(Session::get('user'))
+         <button  class="btn btn-danger mx-2"><a class="nav-link" href="/logout">Logout</a></button>
+
+        @else
+
+    <!-- laravel Middelware      -->
+    
+    php artisan make:middleware  
+
+    Route::group(['middelware'=>"web"], function(){
+        //Routes 
+    });
+
+    <!-- Middelware  -->
+    $path=$request->path();
+    if(($path=="login" || $path=="register") && Session::get('user')){
+        return redirect('/');
+    }
+    elseif(($path!="login" && !Session::get('user')) && ($path! = "register" && !Session::get('user'))){
+        Session::flash('first','You are not logged in!');
+        return response()->view('login');
+    }
+    
+    
+    return $next($request);
+    }
+
+    <!-- print user name  -->
+    {{Session::get('user')}}
 
 
     <!-- Laravel if login and logout  -->

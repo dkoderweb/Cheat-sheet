@@ -401,13 +401,16 @@
             
   Change Password Function In laravel 
             
-  public function updatepassword(Request $request, $id){
+ Public function updatepassword(Request $request, $id){
   $user= User::find($id);
   $userpassword =  crypt::decrypt($user->password);
 
 // return( $userpassword);
   $request->validate([
     'current_password' => 'required',
+    'password' => 'required|same:confirm_password',
+    'confirm_password' => 'required',
+
      
 ]);
 // $pass = Crypt::encrypt($request->current_password);
@@ -415,16 +418,19 @@
 
 
   if ($request->current_password==$userpassword){
-    echo ' match ';
+    $user->password=Crypt::encrypt($request->password);
+    $user->update();
+
+    return redirect('userview')->with('changepass', 'Password Change successfully');
  
    }
    else{
-    echo ' does not match ';
-
-  }   
+    return redirect()->back()->with('wrong', 'Old Password does not match');  }
  }
+  
 
-          
+
+      
             
             
             

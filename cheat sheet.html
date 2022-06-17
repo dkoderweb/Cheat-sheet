@@ -397,7 +397,37 @@
             
     login form 
             
-  https://colorlib.com/wp/template/login-form-v16/          
+  https://colorlib.com/wp/template/login-form-v16/  
+            
+  Change Password Function In laravel 
+            
+  public function updatepassword(Request $request, $id){
+  $user= User::find($id);
+  $userpassword =  crypt::decrypt($user->password);
+
+// return( $userpassword);
+  $request->validate([
+    'current_password' => 'required',
+     
+]);
+// $pass = Crypt::encrypt($request->current_password);
+// return( $pass);
+
+
+  if ($request->current_password==$userpassword){
+    echo ' match ';
+ 
+   }
+   else{
+    echo ' does not match ';
+
+  }   
+ }
+
+          
+            
+            
+            
             
 
 
